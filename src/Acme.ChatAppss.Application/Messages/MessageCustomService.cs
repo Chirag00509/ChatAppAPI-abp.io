@@ -42,22 +42,23 @@ namespace Acme.ChatApp.Messages
                 SenderId = senderId,
                 ReceiverId = message.ReceiverId,
                 content = message.Content,
+                GroupId = message.GroupId,
             };
 
             _context.Messages.Add(messageEntity);
 
             await _context.SaveChangesAsync();
 
-            //var messages = _context.Messages
-            //   .Select(u => new MessageDto
-            //   {
-            //       Id = u.Id,
-            //       SenderId = u.SenderId,
-            //       ReceiverId = u.ReceiverId,
-            //       Content = u.content,
-            //       GroupId = u.GroupId
-            //   })
-            //   .ToList();
+            var messages = _context.Messages
+               .Select(u => new MessageDto
+               {
+                   Id = u.Id,
+                   SenderId = u.SenderId,
+                   ReceiverId = u.ReceiverId,
+                   Content = u.content,
+                   GroupId = u.GroupId
+               })
+               .ToList();
 
             return new ListResultDto<MessageDto>(messages);
         }

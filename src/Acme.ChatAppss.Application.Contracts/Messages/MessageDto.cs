@@ -5,7 +5,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace Acme.ChatApp.Messages
 {
-    public class MessageDto 
+    public class MessageDto : AuditedEntityDto<Guid>
     {
         public Guid Id {  get; set; }
         public Guid SenderId { get; set; }

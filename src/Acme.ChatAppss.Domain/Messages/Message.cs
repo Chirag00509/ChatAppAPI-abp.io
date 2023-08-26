@@ -10,7 +10,7 @@ using Volo.Abp.Identity;
 
 namespace Acme.ChatApp.Messages
 {
-    public class Message
+    public class Message : AuditedAggregateRoot<Guid>
     {
         public Guid Id { get; set; }    
         public Guid SenderId { get; set; }
