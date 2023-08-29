@@ -48,37 +48,18 @@ namespace Acme.ChatApp.Hubs
         {
             var userId = Context.UserIdentifier;
 
-            var senderConnectionId = await _userConnectionService.GetConnectionIdAsync(userId);
             var receiverConnectionId = await _userConnectionService.GetConnectionIdAsync(Convert.ToString(message.ReceiverId));
 
-            if (senderConnectionId != null)
-            {
-                await Clients.Client(senderConnectionId).SendAsync("ReceiveEdited", message);
-            }
-
-            if (receiverConnectionId != null)
-            {
-                await Clients.Client(receiverConnectionId).SendAsync("ReceiveEdited", message);
-            }
-
+           await Clients.Client(receiverConnectionId).SendAsync("ReceiveEdited", message);
         }
 
         public async Task SendDeletedMessage(MessageDto message)
         {
             var userId = Context.UserIdentifier;
 
-            var senderConnectionId = await _userConnectionService.GetConnectionIdAsync(userId);
             var receiverConnectionId = await _userConnectionService.GetConnectionIdAsync(Convert.ToString(message.ReceiverId));
 
-            if (senderConnectionId != null)
-            {
-                await Clients.Client(senderConnectionId).SendAsync("ReceiveDeleted", message);
-            }
-
-            if (receiverConnectionId != null)
-            {
-                await Clients.Client(receiverConnectionId).SendAsync("ReceiveDeleted", message);
-            }
+            await Clients.Client(receiverConnectionId).SendAsync("ReceiveDeleted", message);
         }
     }
 }

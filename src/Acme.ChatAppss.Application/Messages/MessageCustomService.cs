@@ -58,7 +58,7 @@ namespace Acme.ChatApp.Messages
         }
 
 
-        public async Task<ListResultDto<MessageDto>> GetMessages(Guid receiverId)
+        public async Task<ListResultDto<MessageDto>> GetMessages(Guid receiverId, DateTime before, int count)
         {
             var currentUserId = _currentUser.GetId();
 
@@ -84,7 +84,9 @@ namespace Acme.ChatApp.Messages
 
         public async Task<List<MessageDto>> GetMessagesByGroupId(Guid GroupId)
         {
-            var messages = _context.Messages.Where(u => u.GroupId == GroupId).ToList();
+            var messages = _context.Messages.Where(u => u.GroupId == GroupId)
+                .OrderBy(u => u.Timestemp)
+                .ToList();
 
             var message = ObjectMapper.Map<List<Message>, List<MessageDto>>(messages);
 
