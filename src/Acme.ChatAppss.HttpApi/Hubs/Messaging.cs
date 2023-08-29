@@ -39,18 +39,9 @@ namespace Acme.ChatApp.Hubs
         {
             var userId = Context.UserIdentifier;
 
-            var senderConnectionId = await _userConnectionService.GetConnectionIdAsync(userId);
             var receiverConnectionId = await _userConnectionService.GetConnectionIdAsync(Convert.ToString(message.ReceiverId));
 
-            if (senderConnectionId != null)
-            {
-                await Clients.Client(senderConnectionId).SendAsync("ReceiveOne", message);
-            }
-
-            if (receiverConnectionId != null)
-            {
-                await Clients.Client(receiverConnectionId).SendAsync("ReceiveOne", message);
-            }
+           await Clients.Client(receiverConnectionId).SendAsync("ReceiveOne", message, userId);
         }
 
         public async Task SendEditedMessage(MessageDto message)

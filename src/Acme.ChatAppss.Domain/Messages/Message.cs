@@ -19,7 +19,7 @@ namespace Acme.ChatApp.Messages
         public string content { get; set; }
         public Group? Group { get; set; }
         public IdentityUser Sender { get; set; }
-        public IdentityUser Receiver { get; set; }
+        public IdentityUser? Receiver { get; set; }
         public DateTime Timestemp { get; set; }
     }
 }

@@ -37,6 +37,7 @@ using Medallion.Threading.Redis;
 using Medallion.Threading;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Volo.Abp.AutoMapper;
 
 namespace Acme.ChatAppss;
 [DependsOn(
@@ -85,6 +86,11 @@ typeof(ChatAppssHttpApiModule),
         context.Services.AddStackExchangeRedisCache(option =>
             option.Configuration = "localhost:6379"
         );
+
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddMaps<ChatAppssHttpApiHostModule>(); 
+        });
 
         ConfigureAuthentication(context);
         ConfigureBundles();

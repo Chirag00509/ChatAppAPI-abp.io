@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.ObjectMapping;
 using Volo.Abp.Users;
 
 namespace Acme.ChatApp.Messages
@@ -26,7 +27,7 @@ namespace Acme.ChatApp.Messages
             _context = context;
         }
 
-        public async Task<ListResultDto<MessageDto>> PostMessage(RequrstMessageDto message)
+        public async Task<MessageDto> PostMessage(RequrstMessageDto message)
         {
             if (message == null)
             {
@@ -43,24 +44,17 @@ namespace Acme.ChatApp.Messages
                 ReceiverId = message.ReceiverId,
                 content = message.Content,
                 GroupId = message.GroupId,
+                Timestemp = DateTime.Now,
+                CreationTime = DateTime.Now,
             };
 
             _context.Messages.Add(messageEntity);
 
             await _context.SaveChangesAsync();
 
-            var messages = _context.Messages
-               .Select(u => new MessageDto
-               {
-                   Id = u.Id,
-                   SenderId = u.SenderId,
-                   ReceiverId = u.ReceiverId,
-                   Content = u.content,
-                   GroupId = u.GroupId
-               })
-               .ToList();
+            var messages = ObjectMapper.Map<Message, MessageDto>(messageEntity);
 
-            return new ListResultDto<MessageDto>(messages);
+            return messages;
         }
 
 
@@ -88,19 +82,13 @@ namespace Acme.ChatApp.Messages
             return new ListResultDto<MessageDto>(messages);
         }
 
-        public async Task<ListResultDto<MessageDto>> GetMessagesByGroupId(Guid GroupId)
+        public async Task<List<MessageDto>> GetMessagesByGroupId(Guid GroupId)
         {
-            var messages = _context.Messages.Where(u => u.GroupId == GroupId)
-             .Select(u => new MessageDto
-             {
-                 Id = u.Id,
-                 SenderId = u.SenderId,
-                 ReceiverId = u.ReceiverId,
-                 Content = u.content,
-                 GroupId = u.GroupId
-             }).ToList();
+            var messages = _context.Messages.Where(u => u.GroupId == GroupId).ToList();
 
-            return new ListResultDto<MessageDto>(messages);
+            var message = ObjectMapper.Map<List<Message>, List<MessageDto>>(messages);
+
+            return message;
         }
 
         public async Task<ListResultDto<MessageDto>> SearchResult(string result)
